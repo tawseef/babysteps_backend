@@ -23,5 +23,9 @@ const handleTimeSlot = async (req, res)=> {
 
     const result = await checkTimeSlots(id, date); 
 }
+
+
+
+
   
-module.exports = {handleGetDoctors, handleTimeSlot};
+module.exports = {handleGetDoctors, handleTimeSlot, handleAppointment};
