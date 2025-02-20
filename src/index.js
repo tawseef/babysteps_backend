@@ -12,6 +12,5 @@ mongoose
     console.log("Connected To MongoDB");
   })
   .catch((error) => {
-    console.log("Not Connected To DB--", process.env.MONGODB_URI)
-    console.log("Not Connected To DB--")
+    console.log("Not Connected To DB--",error)
   });

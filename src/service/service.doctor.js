@@ -2,9 +2,9 @@ const Doctor = require("../model/doctor.model");
 const Appointment = require("../model/appointment.model");
 
 const getAllDoctorsList = async () => {
-    try {
-        const doctorList = await Doctor.find();
-        if (doctorList) return doctorList;
+  try {
+    const doctorList = await Doctor.find();
+        if (doctorList.length>0) return doctorList;
         else return null;
       } catch (error) {
         throw error;
@@ -29,7 +29,8 @@ const checkTimeSlots = async (id, date)=>{
 
       while (currentTime < endTime) {
         let nextSlot = new Date(currentTime.getTime() + 30 * 60000);
-        const isBooked = bookedSlots.some((slot) => currentTime < slot.end && nextSlot > slot.start);
+        // const isBooked = bookedSlots.some((slot) => currentTime < slot.end && nextSlot > slot.start);
+        const isBooked = appointments.some((slot) => currentTime < slot.end && nextSlot > slot.start);
 
         if (!isBooked) {
           availableSlots.push({
@@ -41,7 +42,7 @@ const checkTimeSlots = async (id, date)=>{
         currentTime = nextSlot;
       }
 
-    res.json({ availableSlots });
+    return availableSlots;
   }else throw error;
 }
 
