@@ -4,11 +4,10 @@ const {getAllDoctorsList, checkTimeSlots} = require("../service/service.doctor")
 const handleGetDoctors = async (req, res) => {
     try{
         const doctorList = await getAllDoctorsList();
-        console.log(doctorList)
-        if (doctorList) res.status(200).json(doctorList);
-        else res.status(httpStatus.NOT_FOUND).json([]);
+        if (doctorList) return res.status(200).json(doctorList);
+        else  return res.status(httpStatus.NOT_FOUND).json([]);
       }catch(error){ 
-        res
+         return res
         .status(httpStatus.BAD_REQUEST)
         .json({ error: error })
     }
