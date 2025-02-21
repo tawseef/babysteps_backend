@@ -25,27 +25,28 @@ const postAppointment = async ({ doctorId, date, duration, appointmentType, pati
     try {
         const doctor = await Doctor.find({ _id: doctorId });
         if (!doctor) return res.status(404).json({ error: "Doctor not found." });
-
         const { start, end } = doctor[0].workingHours;
         if (!start || !end) return res.status(400).json({ error: "Doctor's working hours not set." });
-
+        
         const apptStart = new Date(date);
-        const apptEnd = new Date(apptStart.getTime() + duration * 60000);
-        const workStart = new Date(`${date.split("T")[0]}T${start}`);
-        const workEnd = new Date(`${date.split("T")[0]}T${end}`);
-
+        const apptEnd = new Date(apptStart.getTime() + duration * 60001);
+        const workStart = new Date(`${date.split("T")[0]}T${start}:00.000Z`);
+        const workEnd = new Date(`${date.split("T")[0]}T${end}:00.000Z`);
+        
+        // console.log(apptStart,workStart, apptEnd, workEnd)
         if (apptStart < workStart || apptEnd > workEnd) {
-            return res.status(400).json({ error: "Appointment is outside working hours." });
-        }
-
-        const isSlotBooked = await Appointment.exists({
-            doctorId,
-            date: { $lt: apptEnd, $gte: apptStart },
-        });
-
-
+            console.log("apptStart,workStart, apptEnd, workEnd")
+                return res.status(400).json({ error: "Appointment is outside working hours." });
+            }
+            
+            const isSlotBooked = await Appointment.exists({
+                doctorId,
+                date: { $lt: apptEnd, $gte: apptStart },
+            });
+        
+        
         if (isSlotBooked) return null
-
+        
         const appointment = await Appointment.create({ doctorId, date: apptStart, duration, appointmentType, patientName });
         if (appointment)
             return appointment;
